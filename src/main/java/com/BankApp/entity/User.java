@@ -4,6 +4,7 @@ package com.BankApp.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -22,17 +23,17 @@ public class User {
     @Column(name = "firstname", nullable = false)
     private String firstname;
 
-    @Column(name = "surname", nullable = false)
-    private String surname;
+    @Column(name = "lastname", nullable = false)
+    private String lastname;
+
+    @Column(name = "user_email", nullable = false)
+    private String email;
 
     @Column(name = "dob", nullable = false)
     private String dob;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
-
-    @Column(name = "user_email", nullable = false)
-    private String email;
 
     @Column(name = "nin", nullable = false)
     private String nin;
@@ -43,10 +44,19 @@ public class User {
     @Column(name = "passport", nullable = false)
     private String passport;
 
-    @Column(name = "accountBal", nullable = false)
-    private long accountBal;
 
-    @Column(name = "account_number", nullable = false)
-    private String accountNumber;
+    @Column(name = "account_type", nullable = false)
+    private String accountType;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "role_fk", referencedColumnName = "id")
+    private Roles roles;
+
+    @OneToOne
+    @JoinColumn(name = "wallet_fk", referencedColumnName = "id")
+    private Wallet wallet;
 
 }

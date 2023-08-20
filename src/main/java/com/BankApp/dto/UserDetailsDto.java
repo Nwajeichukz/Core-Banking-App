@@ -1,17 +1,10 @@
 package com.BankApp.dto;
 
-
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 public class UserDetailsDto {
@@ -41,7 +34,15 @@ public class UserDetailsDto {
     @NotEmpty(message = "password cant be blank")
     private String passport;
 
-    @NotNull(message = "a deposit most be made for the registration too be complete")
+    @NotNull(message = "a minimum deposit of $1000 for registration too be complete")
     private Long deposit;
 
+    @javax.validation.constraints.Pattern(regexp = "savings", message = "account type should be savings")
+    private String accountType;
+
+    @NotEmpty(message = "password should not be blank")
+    private String password;
+
+    @NotEmpty(message = "confirm password should not be blank")
+    private String confirmPassword;
 }
