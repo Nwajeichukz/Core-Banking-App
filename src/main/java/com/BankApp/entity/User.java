@@ -44,7 +44,6 @@ public class User {
     @Column(name = "passport", nullable = false)
     private String passport;
 
-
     @Column(name = "account_type", nullable = false)
     private String accountType;
 

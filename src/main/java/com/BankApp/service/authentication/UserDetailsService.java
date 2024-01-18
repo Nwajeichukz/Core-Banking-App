@@ -1,6 +1,6 @@
 package com.BankApp.service.authentication;
 
-import com.BankApp.dto.AppResponse;
+import com.BankApp.dto.response.AppResponse;
 import com.BankApp.dto.AuthenticationRequest;
 import com.BankApp.dto.UserDetailsDto;
 import com.BankApp.entity.Roles;
@@ -15,13 +15,11 @@ import com.BankApp.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 @Slf4j
@@ -47,6 +45,13 @@ public class UserDetailsService implements UserDetailsServiceImpl {
     //Todo 3: transfer of funds.
     //Todo 4: secondary export the pictures.
 
+
+    @Override
+    public List<User> getAllUsers(){
+        return userDetailsRepository.findAll();
+    }
+
+
     @Override
     public AppResponse<?> createAccount(UserDetailsDto userDetailsDto) {
         int zero = 0;
@@ -69,7 +74,7 @@ public class UserDetailsService implements UserDetailsServiceImpl {
                                                 .passport(userDetailsDto.getPassport())
                                                 .dob(userDetailsDto.getDob())
                                                 .nin(userDetailsDto.getNin())
-                                                .password(passwordEncoder.encode(userDetailsDto.getPassport()))
+                                                .password(passwordEncoder.encode(userDetailsDto.getPassword()))
                                                 .email(userDetailsDto.getEmail())
                                                 .accountType(userDetailsDto.getAccountType())
                                                 .roles(role)
@@ -78,29 +83,25 @@ public class UserDetailsService implements UserDetailsServiceImpl {
         userDetailsRepository.save(user);
 
 
-        return new AppResponse<>(0, "user successfully saved", Map.of(
-                "id", user.getId(),
-                "firstname" , user.getFirstname(),
-                "lastname" , user.getLastname(),
-                "dob" , user.getDob(),
-                "email" , user.getEmail(),
-                "accountType", user.getAccountType(),
-                "nin" , user.getNin(),
-                "bvn" , user.getBvn_Pin(),
-                "accountNumber", user.getWallet().getAccountNumber()
-        ));
+        return new AppResponse<>(
+                0,
+                "Dear " + user.getFirstname() + " your account has been successfully created",
+                "This is your Account Number:  " + user.getWallet().getAccountNumber()
+        );
     }
 
     @Override
-    public AppResponse<String> loginAccount(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+    public AppResponse<?> loginAccount(AuthenticationRequest request) {
         var user = myUserDetailsService.loadUserByUsername(request.getEmail());
+        log.info(user.getPassword());
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword()))
+            return  new AppResponse<>(0,"wrong gmail/password");
 
         var jwtToken = jwtService.generateToken(user);
 
         return  new AppResponse<>(0,"Successfully logged in", jwtToken);
+
     }
 
 

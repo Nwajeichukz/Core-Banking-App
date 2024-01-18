@@ -1,6 +1,6 @@
 package com.BankApp.exception;
 
-import com.BankApp.dto.AppResponse;
+import com.BankApp.dto.response.AppResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
